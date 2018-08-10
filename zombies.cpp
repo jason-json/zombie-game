@@ -9,19 +9,17 @@
 
 using namespace std;
 
-class character
-{
+class character{
   public:
 	char name[50];
 	int score;
 	void draw(int, int, WINDOW *win, char n);
-	int disparo(int, WINDOW *win);
-	void cuadradoRelleno(int, int, int, int, char, WINDOW *);
+	int shot(int, WINDOW *win);
+	void squareStuffed(int, int, int, int, char, WINDOW *);
 	character();
 };
 
-class zombie
-{
+class zombie{
   public:
 	void drawZombie(int *, int, WINDOW *win);
 	void starZombie(int *, WINDOW *win);
@@ -31,29 +29,26 @@ class zombie
 	zombie();
 };
 
-class recordScore
-{
+class recordScore{
   public:
-	void guadar(char name[], int score, int duration);
-	int buscar(string searchName);
+	void save(char name[], int score, int duration);
+	int search(string searchName);
 	recordScore();
 };
 
-character::character()
-{
+character::character(){
 	score = 0;
 }
 
-// zombie::zombie()
-// {
-// }
-
-// recordScore::recordScore()
-// {
-// }
-
-void character::draw(int row, int column, WINDOW *win, char n)
+zombie::zombie()
 {
+}
+
+recordScore::recordScore()
+{
+}
+
+void character::draw(int row, int column, WINDOW *win, char n){
 
 	init_pair(5, COLOR_GREEN, COLOR_BLACK);
 	init_pair(3, COLOR_WHITE, COLOR_BLACK);
@@ -73,24 +68,22 @@ void character::draw(int row, int column, WINDOW *win, char n)
 	mvwprintw(win, row + 1, column + 2, "%c", n);
 	wattroff(win, COLOR_PAIR(3) | A_BOLD);
 }
-int character::disparo(int column, WINDOW *win)
-{
+
+int character::shot(int column, WINDOW *win){
 	int i;
 	int time;
 
 	init_pair(2, COLOR_RED, COLOR_BLACK);
 	wattron(win, COLOR_PAIR(2));
 
-	for (i = 35; i >= 2; i--)
-	{
+	for (i = 35; i >= 2; i--){
 		mvwprintw(win, i, column + 2, ".");
 		for (time = 1; time <= 10000000; time += 3)
 			;
 		wrefresh(win);
 	}
 
-	for (i = 2; i <= 35; i++)
-	{
+	for (i = 2; i <= 35; i++){
 		mvwprintw(win, i, column + 2, " ");
 	}
 	score++;
@@ -98,19 +91,16 @@ int character::disparo(int column, WINDOW *win)
 	wattroff(win, COLOR_PAIR(2));
 }
 
-void character::cuadradoRelleno(int row, int column, int altura, int ancho, char c, WINDOW *win)
-{
+void character::squareStuffed(int row, int column, int height, int width, char c, WINDOW *win){
 
-	int i, j;	 /* contadores */
-	int almacena; /* almacena la column */
+	int i, j;	
+	int stores; 
 
-	for (i = 0; i < altura; i += 1, row++)
-	{
+	for (i = 0; i < height; i += 1, row++){
 
-		for (j = 0, almacena = column; j < ancho; j += 1, almacena++)
-		{
+		for (j = 0, stores = column; j < width; j += 1, stores++){
 
-			mvwprintw(win, row, almacena, "%c", c);
+			mvwprintw(win, row, stores, "%c", c);
 
 		} 
 
@@ -118,8 +108,7 @@ void character::cuadradoRelleno(int row, int column, int altura, int ancho, char
 
 } 
 
-void zombie::drawZombie(int *monster, int disparo, WINDOW *win)
-{
+void zombie::drawZombie(int *monster, int shot, WINDOW *win){
 
 	int i;
 	int j;
@@ -127,16 +116,13 @@ void zombie::drawZombie(int *monster, int disparo, WINDOW *win)
 	init_pair(10, COLOR_RED, COLOR_BLACK);
 	init_pair(11, COLOR_WHITE, COLOR_BLACK);
 
-	for (j = 1; j <= 160; j += 6)
-	{
+	for (j = 1; j <= 160; j += 6){
 
 		wattron(win, COLOR_PAIR(10) | A_BOLD); /* activa los colores */
 
-		for (i = 2; i <= monster[2 + j]; i++)
-		{
+		for (i = 2; i <= monster[2 + j]; i++){
 
-			if (i == monster[2 + j])
-			{
+			if (i == monster[2 + j]){
 
 				wattron(win, COLOR_PAIR(11) | A_BOLD); /* activa los colores */
 				mvwprintw(win, i, 2 + j, "0  ");
@@ -144,118 +130,99 @@ void zombie::drawZombie(int *monster, int disparo, WINDOW *win)
 				mvwprintw(win, i + 2, 2 + j, "/\\");
 				wattroff(win, COLOR_PAIR(11) | A_BOLD); /* desactiva los colores */
 
-			} /* end else */
-
-			else
+			}else
 				mvwprintw(win, i, 2 + j, "!");
 		}
 	}
 
-	wattroff(win, COLOR_PAIR(10) | A_BOLD); /* desactiva los colores */
+	wattroff(win, COLOR_PAIR(10) | A_BOLD); 
 }
 
-void zombie::starZombie(int *monster, WINDOW *win)
-{
+void zombie::starZombie(int *monster, WINDOW *win){
 
 	int i;
 
-	for (i = 1; i <= 160; i += 6)
-	{
+	for (i = 1; i <= 160; i += 6){
 
 		monster[i + 3] = 1 + (int)(3.0 * rand() / (RAND_MAX + 1.0));
 	}
 }
 
-void zombie::reproduceZombie(int *monster, WINDOW *win)
-{
+void zombie::reproduceZombie(int *monster, WINDOW *win){
 
 	int i;
 
-	for (i = 3; i <= 100; i += 1)
-	{
+	for (i = 3; i <= 100; i += 1){
 
 		if (0 + (int)(20.0 * rand() / (RAND_MAX + 1.0)) == 1)
 			monster[i]++;
 	}
 }
 
-void zombie::killZombie(int *monster, int disparo, WINDOW *win)
-{
+void zombie::killZombie(int *monster, int shot, WINDOW *win){
 
-	monster[disparo] = 0;
+	monster[shot] = 0;
 }
 
-int zombie::checaPierde(int *monster, WINDOW *win)
-{
+int zombie::checaPierde(int *monster, WINDOW *win){
 
 	int i;
-	int condicion = 0;
+	int condition = 0;
 
-	for (i = 3; i <= 160; i += 6)
-	{
+	for (i = 3; i <= 160; i += 6){
 
 		if (monster[i] > 32)
-			condicion = 1;
+			condition = 1;
 
-	} /* end for */
+	}
 
-	return condicion;
+	return condition;
 
-} /* fin de la función checaPierde */
+} 
 
-void recordScore::guadar(char name[], int score, int duration)
-{
-	ofstream archivo("scores/scores.txt", ios::app);
+void recordScore::save(char name[], int score, int duration){
+	ofstream fileScores("scores/scores.txt", ios::app);
 
-	archivo << name << " " << score << " " << duration << endl;
+	fileScores << name << " " << score << " " << duration << endl;
 
-	archivo.close();
+	fileScores.close();
 }
 
-int recordScore::buscar(string searchName)
-{
+int recordScore::search(string searchName){
 
 	string name, scores;
-	ifstream archivo;
-	archivo.open("scores/scores.txt");
-	if (archivo.fail())
-	{
-		cout << "Error en el archivo!!" << endl;
-	}
-	else
-	{
+	ifstream fileScores;
+	fileScores.open("scores/scores.txt");
 
-		while (!archivo.eof())
-		{
-			archivo >> name >> scores;
+	if (fileScores.fail()){
+		cout << "Error en el fileScores!!" << endl;
+	}else{
 
-			if (searchName == name)
-			{
+		while (!fileScores.eof()){
+			fileScores >> name >> scores;
+
+			if (searchName == name){
 				return 1;
-			}
-			else
-			{
+			}else{
 				return 0;
 			}
 		}
 	}
-	archivo.close();
+	fileScores.close();
 }
 
 void menu();
-void Historia();
-void juego(char name[], char n);
-void vacio(string name, char n);
-void ver();
+void History();
+void game(char name[], char n);
+void clearEmpty(string name, char n);
+void see();
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]){
 	initscr();
 
-	if (has_colors() == FALSE)
-	{
+	if (has_colors() == FALSE){
 		endwin();
-		cout << "LO SENTIMOS \n Su terminal no maneja colores";
+		cout << "Sorry \n Your terminal does not handle colors";
 		return 1;
 	}
 
@@ -272,39 +239,35 @@ int main(int argc, char const *argv[])
 	return 0;
 }
 
-void menu()
-{
+void menu(){
 
 	int op, cont = 0;
 
-	WINDOW *ventanaMenu;
+	WINDOW* windowMenu;
 
-	ventanaMenu = newwin(30, 150, 5, 0);
+	windowMenu = newwin(30, 150, 5, 0);
 
 	initscr();
 
-	wrefresh(ventanaMenu);
-	mvwprintw(ventanaMenu, 1, 55, "Zombies");
+	wrefresh(windowMenu);
+	mvwprintw(windowMenu, 1, 55, "Zombies");
 
-	mvwprintw(ventanaMenu, 3, 55, "1.Jugar");
-	mvwprintw(ventanaMenu, 4, 55, "2.Ver scores");
-	mvwprintw(ventanaMenu, 5, 55, "3.Cerrar Juego");
-	wprintw(ventanaMenu, "\n");
+	mvwprintw(windowMenu, 3, 55, "1.Play");
+	mvwprintw(windowMenu, 4, 55, "2.See scores");
+	mvwprintw(windowMenu, 5, 55, "3.Close game");
+	wprintw(windowMenu, "\n");
 
-	while (op != 0)
-	{
+	while (op != 0){
 
-		mvwscanw(ventanaMenu, 6, 55, "%d", &op);
-		switch (op)
-		{
+		mvwscanw(windowMenu, 6, 55, "%d", &op);
+		switch (op){
 		case 1:
-
-			Historia();
+			History();
 
 			break;
 		case 2:
 
-			ver();
+			see();
 
 			break;
 
@@ -314,9 +277,9 @@ void menu()
 			exit(0);
 			break;
 		default:
-			wrefresh(ventanaMenu);
+			wrefresh(windowMenu);
 
-			mvwprintw(ventanaMenu, 8, 55, "Opcion no valida");
+			mvwprintw(windowMenu, 8, 55, "No valid option");
 
 			break;
 		}
@@ -324,111 +287,103 @@ void menu()
 	endwin();
 }
 
-void Historia()
-{
+void History(){
 	recordScore r;
 	character p;
 	int key, b = 0, a = 0;
 	char n;
-	WINDOW *ventanaHistoria;
+	WINDOW* windowHistory;
 
-	ventanaHistoria = newwin(30, 150, 5, 0);
+	windowHistory = newwin(30, 150, 5, 0);
 	init_pair(1, COLOR_RED, COLOR_BLACK);
 
 	initscr();
 
-	while (a != 0)
-		;
-	{
+	while (a != 0){
 
-		mvwprintw(ventanaHistoria, 1, 55, "Resistencia a oleada de zombies");
+		mvwprintw(windowHistory, 1, 55, "Resistance to surge of zombies");
 
-		mvwprintw(ventanaHistoria, 3, 55, "Ingresa tu name de usuario:");
-		mvwgetstr(ventanaHistoria, 5, 55, p.name);
+		mvwprintw(windowHistory, 3, 55, "Enter your username:");
+		mvwgetstr(windowHistory, 5, 55, p.name);
 
-		int encontro = r.buscar(p.name);
+		int find = r.search(p.name);
 
-		while (encontro != 1 && b == 0)
-		{
+		while (find != 1 && b == 0){
 
-			wrefresh(ventanaHistoria);
+			wrefresh(windowHistory);
 
-			p.draw(8, 55, ventanaHistoria, p.name[0]);
+			p.draw(8, 55, windowHistory, p.name[0]);
 
-			wgetch(ventanaHistoria);
-			wrefresh(ventanaHistoria);
+			wgetch(windowHistory);
+			wrefresh(windowHistory);
 
-			wclear(ventanaHistoria);
+			wclear(windowHistory);
 
-			p.draw(10, 40, ventanaHistoria, p.name[0]);
+			p.draw(10, 40, windowHistory, p.name[0]);
 
-			mvwprintw(ventanaHistoria, 10, 60, "  o  ");
-			mvwprintw(ventanaHistoria, 10, 70, "¡Hey %s Ayudanos!", p.name);
-			mvwprintw(ventanaHistoria, 11, 60, "/| |\\");
-			mvwprintw(ventanaHistoria, 12, 60, " /_\\");
+			mvwprintw(windowHistory, 10, 60, "  o  ");
+			mvwprintw(windowHistory, 10, 70, "¡Hey %s Help us!", p.name);
+			mvwprintw(windowHistory, 11, 60, "/| |\\");
+			mvwprintw(windowHistory, 12, 60, " /_\\");
 
-			mvwprintw(ventanaHistoria, 2, 101, "  o  ");
-			mvwprintw(ventanaHistoria, 3, 101, "/| |\\");
-			mvwprintw(ventanaHistoria, 4, 101, " /_\\");
+			mvwprintw(windowHistory, 2, 101, "  o  ");
+			mvwprintw(windowHistory, 3, 101, "/| |\\");
+			mvwprintw(windowHistory, 4, 101, " /_\\");
 
-			mvwprintw(ventanaHistoria, 5, 100, "  o  ");
-			mvwprintw(ventanaHistoria, 6, 100, "/| |\\");
-			mvwprintw(ventanaHistoria, 7, 100, " /_\\");
+			mvwprintw(windowHistory, 5, 100, "  o  ");
+			mvwprintw(windowHistory, 6, 100, "/| |\\");
+			mvwprintw(windowHistory, 7, 100, " /_\\");
 
-			mvwprintw(ventanaHistoria, 16, 100, "  o  ");
-			mvwprintw(ventanaHistoria, 17, 100, "/| |\\");
-			mvwprintw(ventanaHistoria, 18, 100, " /_\\");
+			mvwprintw(windowHistory, 16, 100, "  o  ");
+			mvwprintw(windowHistory, 17, 100, "/| |\\");
+			mvwprintw(windowHistory, 18, 100, " /_\\");
 
-			mvwprintw(ventanaHistoria, 19, 101, "  o  ");
-			mvwprintw(ventanaHistoria, 20, 101, "/| |\\");
-			mvwprintw(ventanaHistoria, 21, 101, " /_\\");
+			mvwprintw(windowHistory, 19, 101, "  o  ");
+			mvwprintw(windowHistory, 20, 101, "/| |\\");
+			mvwprintw(windowHistory, 21, 101, " /_\\");
 
-			wgetch(ventanaHistoria);
-			wrefresh(ventanaHistoria);
+			wgetch(windowHistory);
+			wrefresh(windowHistory);
 
-			wclear(ventanaHistoria);
+			wclear(windowHistory);
 
-			for (int i = 40; i < 60; ++i)
-			{
-				mvwprintw(ventanaHistoria, 5, i, "-");
+			for (int i = 40; i < 60; ++i){
+				mvwprintw(windowHistory, 5, i, "-");
 			}
 
-			wattron(ventanaHistoria, COLOR_PAIR(1) | A_BOLD);
-			mvwprintw(ventanaHistoria, 2, 50, "0  ");
-			mvwprintw(ventanaHistoria, 3, 50, "||\\");
-			mvwprintw(ventanaHistoria, 4, 50, "/\\");
-			wattroff(ventanaHistoria, COLOR_PAIR(1) | A_BOLD);
+			wattron(windowHistory, COLOR_PAIR(1) | A_BOLD);
+			mvwprintw(windowHistory, 2, 50, "0  ");
+			mvwprintw(windowHistory, 3, 50, "||\\");
+			mvwprintw(windowHistory, 4, 50, "/\\");
+			wattroff(windowHistory, COLOR_PAIR(1) | A_BOLD);
 
-			p.draw(16, 40, ventanaHistoria, p.name[0]);
-			for (int i = 70; i < 150; ++i)
-			{
-				mvwprintw(ventanaHistoria, 2, i, "*");
+			p.draw(16, 40, windowHistory, p.name[0]);
+			for (int i = 70; i < 150; ++i){
+				mvwprintw(windowHistory, 2, i, "*");
 			}
 
-			for (int i = 2; i < 15; ++i)
-			{
-				mvwprintw(ventanaHistoria, i, 70, "*");
+			for (int i = 2; i < 15; ++i){
+				mvwprintw(windowHistory, i, 70, "*");
 			}
 
-			for (int i = 70; i < 150; ++i)
-			{
-				mvwprintw(ventanaHistoria, 15, i, "*");
+			for (int i = 70; i < 150; ++i){
+				mvwprintw(windowHistory, 15, i, "*");
 			}
-			mvwprintw(ventanaHistoria, 16, 67, "¡**");
-			mvwprintw(ventanaHistoria, 16, 60, "  o  ");
-			mvwprintw(ventanaHistoria, 4, 71, "¡Hey %s hemos predesido una oleada de zombies como el que ves detras", p.name);
-			mvwprintw(ventanaHistoria, 5, 71, "de la linea, solo se les puede matar disparandoles en la cabeza,pero ninguno");
-			mvwprintw(ventanaHistoria, 6, 71, "de nosotros tiene el valor para hacerlo, queremos que nos ayudes a mantenerlos");
-			mvwprintw(ventanaHistoria, 7, 71, "detras del alabre de puas lo mas que puedas.");
-			mvwprintw(ventanaHistoria, 8, 71, "Cada ves que disparas le das a un zombie aunque no lo veas, ya que no ");
-			mvwprintw(ventanaHistoria, 9, 71, "sabemos cuantos son. ");
-			mvwprintw(ventanaHistoria, 13, 71, "¡SUERTE!");
-			mvwprintw(ventanaHistoria, 17, 60, "/| |\\");
-			mvwprintw(ventanaHistoria, 18, 60, " /_\\");
-			mvwprintw(ventanaHistoria, 18, 70, ".");
-			wgetch(ventanaHistoria);
+			mvwprintw(windowHistory, 16, 67, "¡**");
+			mvwprintw(windowHistory, 16, 60, "  o  ");
+			mvwprintw(windowHistory, 4, 71, "Hey %s we have predicted a wave of zombies like the one you see behind", p.name);
+			mvwprintw(windowHistory, 5, 71, "of the line, you can only kill by shooting in the head, but none");
+			mvwprintw(windowHistory, 6, 71, "of us has the courage to do it, we want you to help us keep them");
+			mvwprintw(windowHistory, 7, 71, "behind the barbed wire as much as you can.");
+			mvwprintw(windowHistory, 8, 71, "Eseey time you shoot, you hit a zombie even if you do not see it, since it we does not");
+			mvwprintw(windowHistory, 9, 71, "know how many are. ");
+			mvwprintw(windowHistory, 13, 71, "GOOD LUCK!");
+			mvwprintw(windowHistory, 17, 60, "/| |\\");
+			mvwprintw(windowHistory, 18, 60, " /_\\");
+			mvwprintw(windowHistory, 18, 70, ".");
+			wgetch(windowHistory);
 
-			juego(p.name, p.name[0]);
+			game(p.name, p.name[0]);
 			endwin();
 		}
 	}
@@ -436,76 +391,68 @@ void Historia()
 	endwin();
 }
 
-void vacio(char name[], char n)
-{
+void clearEmpty(char name[], char n){
 
-	WINDOW *vacio;
+	WINDOW *clearEmpty;
 
-	vacio = newwin(50, 150, 0, 0);
+	clearEmpty = newwin(50, 150, 0, 0);
 
 	initscr();
 	refresh();
-	wrefresh(vacio);
-	werase(vacio);
+	wrefresh(clearEmpty);
+	werase(clearEmpty);
 	init_pair(1, COLOR_MAGENTA, COLOR_WHITE);
-	wbkgd(vacio, COLOR_PAIR(1) | A_BOLD);
+	wbkgd(clearEmpty, COLOR_PAIR(1) | A_BOLD);
 
-	/* desactiva los colores */
-	werase(vacio);
-	wrefresh(vacio); /* refresca la pantalla */
-	//wgetch(vacio);		/* espera una pulsación para continuar */
-	nocbreak(); /* desactiva el envio inmediato de teclas */
+
+	werase(clearEmpty);
+	wrefresh(clearEmpty); 
+	nocbreak(); 
 	menu();
 }
 
-void juego(char name[], char n)
-{
+void game(char name[], char n){
 
 	clock_t duration;
 	recordScore r;
 	character p;
 	int pun;
 	zombie z;
-	WINDOW *ventanaJugar;
+	WINDOW *windowPlay;
 
-	ventanaJugar = newwin(50, 150, 0, 0);
+	windowPlay = newwin(50, 150, 0, 0);
 
 	initscr();
 	refresh();
-	wrefresh(ventanaJugar);
-	werase(ventanaJugar);
+	wrefresh(windowPlay);
+	werase(windowPlay);
 	init_pair(1, COLOR_MAGENTA, COLOR_WHITE);
 
-	////////////////////////////////////////77
-	/* variables locales */
-	int key; /* almacena una tecla */
+	
+	int key;
 
-	int naveX = 1;		   /* coordenada X */
-	const int NAVE_Y = 35; /* coordenada Y */
+	int naveX = 1;		   
+	const int NAVE_Y = 35; 
 
 	int monster[161] = {0};
 
 	srand(time(NULL));
 
-	z.starZombie(monster, ventanaJugar);
+	z.starZombie(monster, windowPlay);
 
-	keypad(ventanaJugar, TRUE);  /* activa / desactiva las teclas especiales */
-	curs_set(FALSE);			 /* hace invisible el cursor fisico */
-	cbreak();					 /* activa el envio inmediato de teclas */
-	nodelay(ventanaJugar, TRUE); /* activa / desactiva la espera para lectura del teclado */
+	keypad(windowPlay, TRUE);  
+	curs_set(FALSE);			
+	cbreak();					
+	nodelay(windowPlay, TRUE); 
 
-	if (has_colors() /* verifica si la terminal tiene soporte o no */)
-	{
+	if (has_colors()){
 
-		start_color(); /* inicia el modo de colores */
+		start_color();
 		init_pair(1, COLOR_WHITE, COLOR_BLACK);
 		init_pair(8, COLOR_GREEN, COLOR_BLACK);
 		init_pair(13, COLOR_WHITE, COLOR_BLUE);
 
-	} /* fin de if colores */
-
-	else
-	{
+	}else{
 
 		endwin();
 		cout << "You do not have support to use colors!";
@@ -513,51 +460,48 @@ void juego(char name[], char n)
 
 	} /* fin de else */
 
-	wbkgd(ventanaJugar, COLOR_PAIR(1) | A_BOLD);
-	wborder(ventanaJugar, '|', '|', '-', '-', '+', '+', '+', '+'); /* draw un cuadro */
+	wbkgd(windowPlay, COLOR_PAIR(1) | A_BOLD);
+	wborder(windowPlay, '|', '|', '-', '-', '+', '+', '+', '+'); /* draw un cuadro */
 
-	wattron(ventanaJugar, COLOR_PAIR(12)); /* activa los colores */
-	mvwprintw(ventanaJugar, 3, 115, "%s", name);
+	wattron(windowPlay, COLOR_PAIR(12)); /* activa los colores */
+	mvwprintw(windowPlay, 3, 115, "%s", name);
 
-	for (int i = 1; i < 100; i += 6)
-	{
-		mvwprintw(ventanaJugar, 34, i, "-");
-		mvwprintw(ventanaJugar, i, 105, "|");
+	for (int i = 1; i < 100; i += 6){
+		mvwprintw(windowPlay, 34, i, "-");
+		mvwprintw(windowPlay, i, 105, "|");
 	}
-	mvwprintw(ventanaJugar, 0, 1, "BACK F2");
-	wattroff(ventanaJugar, COLOR_PAIR(12)); /* desactiva los colores */
 
-	wattron(ventanaJugar, COLOR_PAIR(13)); /* activa los colores */
-	mvwprintw(ventanaJugar, 0, 35, "\"KILL THE ZOMBIS WAVE\"");
-	wattroff(ventanaJugar, COLOR_PAIR(13)); /* desactiva los colores */
+	mvwprintw(windowPlay, 0, 1, "BACK F2");
+	wattroff(windowPlay, COLOR_PAIR(12)); /* desactiva los colores */
 
-	wattron(ventanaJugar, COLOR_PAIR(1)); /* activa los colores */
+	wattron(windowPlay, COLOR_PAIR(13)); /* activa los colores */
+	mvwprintw(windowPlay, 0, 35, "\"KILL THE ZOMBIS WAVE\"");
+	wattroff(windowPlay, COLOR_PAIR(13)); /* desactiva los colores */
 
-	z.drawZombie(monster, 1, ventanaJugar);
+	wattron(windowPlay, COLOR_PAIR(1)); /* activa los colores */
+
+	z.drawZombie(monster, 1, windowPlay);
 	duration = clock();
-	do
-	{
+	do{
 
-		/* encargado del cielo */
-		if (key == KEY_UP || key == KEY_LEFT || key == KEY_RIGHT)
-		{
+	
+		if (key == KEY_UP || key == KEY_LEFT || key == KEY_RIGHT){
 
-			p.cuadradoRelleno(2, 3, 32, 100, ' ', ventanaJugar);
-			z.drawZombie(monster, 1, ventanaJugar);
+			p.squareStuffed(2, 3, 32, 100, ' ', windowPlay);
+			z.drawZombie(monster, 1, windowPlay);
 
-		} /* end if */
+		} 
 
-		if ((int)(10000.0 * rand() / (RAND_MAX + 1.0)) == 0)
-		{
+		if ((int)(10000.0 * rand() / (RAND_MAX + 1.0)) == 0){
 
-			p.cuadradoRelleno(2, 3, 32, 100, ' ', ventanaJugar);
-			z.drawZombie(monster, 1, ventanaJugar);
+			p.squareStuffed(2, 3, 32, 100, ' ', windowPlay);
+			z.drawZombie(monster, 1, windowPlay);
 
-		} /* end if */
+		} 
 
-		p.draw(NAVE_Y, naveX, ventanaJugar, n);
+		p.draw(NAVE_Y, naveX, windowPlay, n);
 
-		key = wgetch(ventanaJugar);
+		key = wgetch(windowPlay);
 
 		if (key == KEY_RIGHT && naveX != 100)
 			naveX++;
@@ -565,57 +509,53 @@ void juego(char name[], char n)
 		else if (key == KEY_LEFT && naveX != 1)
 			naveX--;
 
-		else if (key == KEY_UP)
-		{
+		else if (key == KEY_UP){
 
-			pun = p.disparo(naveX, ventanaJugar);
-			z.killZombie(monster, naveX + 2, ventanaJugar);
+			pun = p.shot(naveX, windowPlay);
+			z.killZombie(monster, naveX + 2, windowPlay);
 
-			wrefresh(ventanaJugar);
+			wrefresh(windowPlay);
 
-			mvwprintw(ventanaJugar, 5, 115, "shots: %i", pun);
+			mvwprintw(windowPlay, 5, 115, "shots: %i", pun);
 		}
 
-		p.cuadradoRelleno(35, 1, 3, 160, ' ', ventanaJugar);
+		p.squareStuffed(35, 1, 3, 160, ' ', windowPlay);
 
-		z.drawZombie(monster, 1, ventanaJugar);
+		z.drawZombie(monster, 1, windowPlay);
 
 		if ((int)(1000.0 * rand() / (RAND_MAX + 1.0)) == 0)
-			z.reproduceZombie(monster, ventanaJugar);
+			z.reproduceZombie(monster, windowPlay);
 
-		if (z.checaPierde(monster, ventanaJugar))
-		{
+		if (z.checaPierde(monster, windowPlay)){
 			duration = clock() - duration;
-			z.drawZombie(monster, 1, ventanaJugar);
+			z.drawZombie(monster, 1, windowPlay);
 			key = KEY_F(2);
-			p.draw(NAVE_Y, naveX, ventanaJugar, n);
-			nodelay(ventanaJugar, FALSE);
-			wattron(ventanaJugar, COLOR_PAIR(8) | A_BOLD | A_UNDERLINE);
-			p.cuadradoRelleno(35, 1, 5, 160, ' ', ventanaJugar);
-			mvwprintw(ventanaJugar, 30, 115, "YOU LOST");
-			mvwprintw(ventanaJugar, 31, 115, "THANK YOU FOR HELPING");
-			mvwprintw(ventanaJugar, 32, 115, "DURED SECONDS: %i ", int(duration) / CLOCKS_PER_SEC);
-			r.guadar(name, pun, int(duration) / CLOCKS_PER_SEC);
-			wattroff(ventanaJugar, COLOR_PAIR(8) | A_BOLD | A_UNDERLINE);
-			while (wgetch(ventanaJugar) != KEY_F(2))
-				;
+			p.draw(NAVE_Y, naveX, windowPlay, n);
+			nodelay(windowPlay, FALSE);
+			wattron(windowPlay, COLOR_PAIR(8) | A_BOLD | A_UNDERLINE);
+			p.squareStuffed(35, 1, 5, 160, ' ', windowPlay);
+			mvwprintw(windowPlay, 30, 115, "YOU LOST");
+			mvwprintw(windowPlay, 31, 115, "THANK YOU FOR HELPING");
+			mvwprintw(windowPlay, 32, 115, "DURED SECONDS: %i ", int(duration) / CLOCKS_PER_SEC);
+			r.save(name, pun, int(duration) / CLOCKS_PER_SEC);
+			wattroff(windowPlay, COLOR_PAIR(8) | A_BOLD | A_UNDERLINE);
+			while (wgetch(windowPlay) != KEY_F(2));
 		}
 
 	} while (key != KEY_F(2));
 
-	wattroff(ventanaJugar, COLOR_PAIR(1));
-	werase(ventanaJugar);
-	wrefresh(ventanaJugar);
+	wattroff(windowPlay, COLOR_PAIR(1));
+	werase(windowPlay);
+	wrefresh(windowPlay);
 	nocbreak();
-	vacio(name, n);
+	clearEmpty(name, n);
 
 	endwin();
 }
 
-void ver()
-{
+void see(){
 	recordScore r;
-	WINDOW *ven;
+	WINDOW* ven;
 
 	char c;
 
@@ -624,14 +564,13 @@ void ver()
 	init_pair(3, COLOR_WHITE, COLOR_BLACK);
 	init_pair(12, COLOR_CYAN, COLOR_BLACK);
 	char name[50], shots[50], duration[50];
-	FILE *f;
+	FILE* f;
 	f = fopen("scores/scores.txt", "r");
 	initscr();
 
-	if (f != NULL)
-	{
-		while (!feof(f))
-		{
+	if (f != NULL){
+
+		while (!feof(f)){
 			fscanf(f, "%s %s %s \n", name, shots, duration);
 			wclear(ven);
 			wrefresh(ven);
