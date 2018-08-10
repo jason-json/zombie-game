@@ -34,7 +34,7 @@ class zombie
 class recordScore
 {
   public:
-	void guadar(char name[], int score, int tiempo);
+	void guadar(char name[], int score, int duration);
 	int buscar(string searchName);
 	recordScore();
 };
@@ -203,11 +203,11 @@ int zombie::checaPierde(int *monster, WINDOW *win)
 
 } /* fin de la función checaPierde */
 
-void recordScore::guadar(char name[], int score, int tiempo)
+void recordScore::guadar(char name[], int score, int duration)
 {
 	ofstream archivo("scores/scores.txt", ios::app);
 
-	archivo << name << " " << score << " " << tiempo << endl;
+	archivo << name << " " << score << " " << duration << endl;
 
 	archivo.close();
 }
@@ -461,7 +461,7 @@ void vacio(char name[], char n)
 void juego(char name[], char n)
 {
 
-	clock_t tiempo;
+	clock_t duration;
 	recordScore r;
 	character p;
 	int pun;
@@ -508,8 +508,8 @@ void juego(char name[], char n)
 	{
 
 		endwin();
-		cout << "¡No tienes soporte para usar colores!";
-		//SALIRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRrr
+		cout << "You do not have support to use colors!";
+	
 
 	} /* fin de else */
 
@@ -524,17 +524,17 @@ void juego(char name[], char n)
 		mvwprintw(ventanaJugar, 34, i, "-");
 		mvwprintw(ventanaJugar, i, 105, "|");
 	}
-	mvwprintw(ventanaJugar, 0, 1, "ATRRAS F2");
+	mvwprintw(ventanaJugar, 0, 1, "BACK F2");
 	wattroff(ventanaJugar, COLOR_PAIR(12)); /* desactiva los colores */
 
 	wattron(ventanaJugar, COLOR_PAIR(13)); /* activa los colores */
-	mvwprintw(ventanaJugar, 0, 35, "\"ANIQUILA LA OLEADA DE ZOMBIES\"");
+	mvwprintw(ventanaJugar, 0, 35, "\"KILL THE ZOMBIS WAVE\"");
 	wattroff(ventanaJugar, COLOR_PAIR(13)); /* desactiva los colores */
 
 	wattron(ventanaJugar, COLOR_PAIR(1)); /* activa los colores */
 
 	z.drawZombie(monster, 1, ventanaJugar);
-	tiempo = clock();
+	duration = clock();
 	do
 	{
 
@@ -573,7 +573,7 @@ void juego(char name[], char n)
 
 			wrefresh(ventanaJugar);
 
-			mvwprintw(ventanaJugar, 5, 115, "Disparos: %i", pun);
+			mvwprintw(ventanaJugar, 5, 115, "shots: %i", pun);
 		}
 
 		p.cuadradoRelleno(35, 1, 3, 160, ' ', ventanaJugar);
@@ -585,17 +585,17 @@ void juego(char name[], char n)
 
 		if (z.checaPierde(monster, ventanaJugar))
 		{
-			tiempo = clock() - tiempo;
+			duration = clock() - duration;
 			z.drawZombie(monster, 1, ventanaJugar);
 			key = KEY_F(2);
 			p.draw(NAVE_Y, naveX, ventanaJugar, n);
 			nodelay(ventanaJugar, FALSE);
 			wattron(ventanaJugar, COLOR_PAIR(8) | A_BOLD | A_UNDERLINE);
 			p.cuadradoRelleno(35, 1, 5, 160, ' ', ventanaJugar);
-			mvwprintw(ventanaJugar, 30, 115, "PERDISTE");
-			mvwprintw(ventanaJugar, 31, 115, "GRACIAS POR AYUDAR");
-			mvwprintw(ventanaJugar, 32, 115, "SEGUNNDOS DURADOS: %i ", int(tiempo) / CLOCKS_PER_SEC);
-			r.guadar(name, pun, int(tiempo) / CLOCKS_PER_SEC);
+			mvwprintw(ventanaJugar, 30, 115, "YOU LOST");
+			mvwprintw(ventanaJugar, 31, 115, "THANK YOU FOR HELPING");
+			mvwprintw(ventanaJugar, 32, 115, "DURED SECONDS: %i ", int(duration) / CLOCKS_PER_SEC);
+			r.guadar(name, pun, int(duration) / CLOCKS_PER_SEC);
 			wattroff(ventanaJugar, COLOR_PAIR(8) | A_BOLD | A_UNDERLINE);
 			while (wgetch(ventanaJugar) != KEY_F(2))
 				;
@@ -623,7 +623,7 @@ void ver()
 	init_pair(5, COLOR_GREEN, COLOR_BLACK);
 	init_pair(3, COLOR_WHITE, COLOR_BLACK);
 	init_pair(12, COLOR_CYAN, COLOR_BLACK);
-	char name[50], disparos[50], tiempo[50];
+	char name[50], shots[50], duration[50];
 	FILE *f;
 	f = fopen("scores/scores.txt", "r");
 	initscr();
@@ -632,13 +632,13 @@ void ver()
 	{
 		while (!feof(f))
 		{
-			fscanf(f, "%s %s %s \n", name, disparos, tiempo);
+			fscanf(f, "%s %s %s \n", name, shots, duration);
 			wclear(ven);
 			wrefresh(ven);
 
-			mvwprintw(ven, 4, 55, "name: %s", name);
-			mvwprintw(ven, 5, 55, "Disparos: %s", disparos);
-			mvwprintw(ven, 6, 55, "Segundos: %s", tiempo);
+			mvwprintw(ven, 4, 55, "Name: %s", name);
+			mvwprintw(ven, 5, 55, "Shots: %s", shots);
+			mvwprintw(ven, 6, 55, "Seconds: %s", duration);
 
 			wattron(ven, COLOR_PAIR(5) | A_BOLD);
 			mvwprintw(ven, 8, 55, "  o  ");
@@ -658,7 +658,7 @@ void ver()
 		fclose(f);
 	}
 
-	mvwprintw(ven, 13, 55, "Fin de jugadores");
+	mvwprintw(ven, 13, 55, "End of players");
 
 	wgetch(ven);
 	menu();
