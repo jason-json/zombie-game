@@ -299,7 +299,7 @@ void History(){
 
 	initscr();
 
-	while (a != 0){
+	while (a == 0){
 
 		mvwprintw(windowHistory, 1, 55, "Resistance to surge of zombies");
 
@@ -372,11 +372,11 @@ void History(){
 			mvwprintw(windowHistory, 16, 67, "¡**");
 			mvwprintw(windowHistory, 16, 60, "  o  ");
 			mvwprintw(windowHistory, 4, 71, "Hey %s we have predicted a wave of zombies like the one you see behind", p.name);
-			mvwprintw(windowHistory, 5, 71, "of the line, you can only kill by shooting in the head, but none");
+			mvwprintw(windowHistory, 5, 71, "the line, you can only kill them by shooting them in the head, but none");
 			mvwprintw(windowHistory, 6, 71, "of us has the courage to do it, we want you to help us keep them");
-			mvwprintw(windowHistory, 7, 71, "behind the barbed wire as much as you can.");
-			mvwprintw(windowHistory, 8, 71, "Eseey time you shoot, you hit a zombie even if you do not see it, since it we does not");
-			mvwprintw(windowHistory, 9, 71, "know how many are. ");
+			mvwprintw(windowHistory, 7, 71, "behind the wire as much as you can.");
+			mvwprintw(windowHistory, 8, 71, "Every time you shoot, you give it a zombie even if you do not see it, since we do not ");
+			mvwprintw(windowHistory, 9, 71, "know how many they are. ");
 			mvwprintw(windowHistory, 13, 71, "GOOD LUCK!");
 			mvwprintw(windowHistory, 17, 60, "/| |\\");
 			mvwprintw(windowHistory, 18, 60, " /_\\");
